@@ -9,6 +9,8 @@ Node.num_of_instances=0
 t0=time()
 solution=bfs(initial_state)
 t1=time()-t0
+print("[missionaries, cannibal, boat location]")
+print("-1 and 1 represents opposite banks of river")
 print('Solution:', solution)
 print('space:',Node.num_of_instances)
 print('time for bfs :',t1,'seconds')
@@ -23,4 +25,4 @@ print('Solution:', solution)
 print('space:',Node.num_of_instances)
 print('time for dfs :',t3,'seconds')
 
-print("THE TIME TAKEN BY DFS IS {} and BFS is {} ".format(t3,t1))
+# print("THE TIME TAKEN BY DFS IS {} and BFS is {} ".format(t3,t1))

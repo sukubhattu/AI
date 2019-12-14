@@ -1,13 +1,17 @@
 from queue import Queue
+# for more about queue model
+# https://docs.python.org/2/library/queue.html
 from node import Node
 import pydot
 import numpy as np
 from collections import deque
+# collections is the python built in module
+# dequeue is preferred over the list. the operations on the deque are append(), appendleft(), pop() and popleft()
 
-def bfs(initial_state,mode="bfs"):
-    graph = pydot.Dot(graph_type='digraph',label="Missionaries and Cannibals (BFS)  ",fontsize="30", color="red",
+def bfs(initial_state, mode="bfs"):
+    graph = pydot.Dot(graph_type='digraph',label="Missionaries and Cannibals Problem (BFS)  ",fontsize="30",
                                                     fontcolor="black",fontname='Impact', fillcolor="black")
-    start_node = Node(initial_state, None, None,0)
+    start_node = Node(initial_state, None, None, 0)
     if start_node.goal_test():
         return start_node.find_solution()
 
@@ -15,18 +19,21 @@ def bfs(initial_state,mode="bfs"):
     q.put(start_node)
     explored=[]
     killed=[]
-    print("The starting node is \ndepth=%d" % start_node.depth)
-    print(str(start_node.state))
+    # printing the initial state of the missionary and cannibal problem
+    print("The starting node is at depth=%d" % start_node.depth,"and its value is" , str(start_node.state))
+    # print(str(start_node.state))
     while not(q.empty()):
         node=q.get()
-        print("\nthe node selected to expand is\ndepth="+str(node.depth)+"\n"+str(node.state)+"\n")
+        print("the node selected to expand is at depth="+str(node.depth)+" and the node is "+str(node.state)+"\n")
         explored.append(node.state)
         graph.add_node(node.graph_node)
         if node.parent:
             diff=np.subtract(node.parent.state,node.state)
             if node.parent.state[2]==0:
                 diff[0],diff[1]=-diff[0],-diff[1]
+                # the line below is adding the text at side of line
             graph.add_edge(pydot.Edge(node.parent.graph_node, node.graph_node,label=str(diff)))
+            # graph.add_edge(pydot.Edge(node.parent.graph_node, node.graph_node))
         children=node.generate_child()
         if not node.is_killed():
             print("the children nodes of this node are",end="")
@@ -53,17 +60,14 @@ def bfs(initial_state,mode="bfs"):
                                 graph.add_node(node)
 
                         draw_legend(graph)
-                        graph.write_png('MC_BFS.png')
-
+                        graph.write_png('BFS.png')
                         return child.find_solution()
                     if child.is_valid():
                         q.put(child)
                         explored.append(child.state)
-
         else:
             print("This node is killed")
             killed.append("\""+str(node.state)+"\"")
-
     return
 
 
@@ -75,18 +79,18 @@ def draw_legend(graph):
     graphlegend.add_node(legend1)
     legend2 = pydot.Node("Killed ", shape="plaintext",fontname='Impact')
     graphlegend.add_node(legend2)
-    legend3 = pydot.Node('Impossible', shape="plaintext",fontname='Impact')
+    legend3 = pydot.Node('Not possible state', shape="plaintext",fontname='Impact')
     graphlegend.add_node(legend3)
     legend4 = pydot.Node('Goal', shape="plaintext",fontname='Impact')
     graphlegend.add_node(legend4)
 
-    node1 = pydot.Node("1", style="filled", fillcolor="green", label="")
+    node1 = pydot.Node("1", style="filled", fillcolor="yellow", label="")
     graphlegend.add_node(node1)
     node2 = pydot.Node("2", style="filled", fillcolor="red", label="")
     graphlegend.add_node(node2)
     node3 = pydot.Node("3", style="filled", fillcolor="blue", label="")
     graphlegend.add_node(node3)
-    node4 = pydot.Node("4", style="filled", fillcolor="gold", label="")
+    node4 = pydot.Node("4", style="filled", fillcolor="green", label="")
     graphlegend.add_node(node4)
 
     graph.add_subgraph(graphlegend)
@@ -99,8 +103,8 @@ def draw_legend(graph):
     graph.add_edge(pydot.Edge(node3, node4, style="invis"))
 
 def dfs(initial_state):
-	graph = pydot.Dot(graph_type='digraph',label=" Missionaries and Cannibals (DFS) ", color="yellow",
-													fontcolor="black", style="filled", fillcolor="blue")
+	graph = pydot.Dot(graph_type='digraph',label=" Missionaries and Cannibals (DFS) ", fontsize="20",color="yellow",
+													fontcolor="black", style="filled", fillcolor="blue", fontname='Impact')
 	start_node = Node(initial_state, None, None,0)
 	if start_node.goal_test():
 		return start_node.find_solution()
@@ -147,7 +151,7 @@ def dfs(initial_state):
 								graph.add_node(node)
 
 						draw_legend(graph)
-						graph.write_png('MC_DFS.png')
+						graph.write_png('DFS.png')
 
 						return child.find_solution()
 					if child.is_valid():
